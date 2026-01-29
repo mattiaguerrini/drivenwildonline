@@ -262,8 +262,9 @@ function handleIncomingConnection(conn) {
     
     conn.on('open', () => {
         // Assegna colore al nuovo giocatore
-        const colorIndex = remotePlayers.size + 1;
-        const playerColor = MULTIPLAYER_COLORS[colorIndex];
+        // Host ha indice 0, quindi i giocatori successivi sono 1, 2, ecc.
+        const colorIndex = remotePlayers.size + 1; // +1 perché l'host è 0
+        const playerColor = MULTIPLAYER_COLORS[colorIndex % MULTIPLAYER_COLORS.length];
         
         // Invia info iniziali al nuovo giocatore
         conn.send({
@@ -826,36 +827,4 @@ function hostForceStart() {
     
     // Avvia la partita
     startMultiplayerGame();
-}
-
-// Controlla se tutti sono pronti
-function checkAllReady() {
-    if (!isRoomHost) return;
-    
-    const totalPlayers = 1 + remotePlayers.size;
-    if (totalPlayers < 2) return;
-    
-    let allReady = playersReady.get(myPlayerId) || false;
-    remotePlayers.forEach((player, playerId) => {
-        if (!playersReady.get(playerId)) allReady = false;
-    });
-    
-    if (allReady) {
-        console.log('Tutti pronti! Verifica timer...');
-        
-        // Se il timer non è ancora scaduto, aspetta
-        if (!canHostStart && hostStartTimer) {
-            document.getElementById('waiting-message').textContent = 
-                'Tutti pronti! L\'host può startare tra poco...';
-            document.getElementById('waiting-message').style.display = 'block';
-            return;
-        }
-        
-        // Altrimenti avvia direttamente
-        setTimeout(() => {
-            stopHostTimer();
-            broadcast({ type: 'gameStart' });
-            startMultiplayerGame();
-        }, 1000);
-    }
 }

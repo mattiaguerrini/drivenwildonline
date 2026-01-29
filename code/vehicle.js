@@ -245,16 +245,16 @@ class Vehicle
             const distanceFromPlayer = this.pos.z - playerVehicle.pos.z;
             const absDistance = Math.abs(distanceFromPlayer);
             
-            // I veicoli remoti hanno sempre priorità di rendering
+            // I veicoli remoti NON vengono mai nascosti (culled)
+            // Solo i veicoli AI possono essere nascosti se troppo lontani
             if (!this.isRemote && absDistance > 4e4)
                 return; // cull AI vehicles too far
             
-            // Riduce dettagli per veicoli molto lontani
-            if (absDistance > 2e4)
+            // Per i veicoli AI molto lontani, riduci i dettagli
+            if (!this.isRemote && absDistance > 2e4)
             {
-                // Skip dettagli come ruote per veicoli lontani (tranne remoti)
-                if (!this.isRemote)
-                    return;
+                // Skip dettagli come ruote per veicoli AI lontani
+                return;
             }
         }
 
@@ -653,7 +653,7 @@ class PlayerVehicle extends Vehicle
         }
         
         // Invia aggiornamento posizione al server multiplayer
-        if (typeof multiplayerEnabled !== 'undefined' && multiplayerEnabled) {
+        if (typeof multiplayerEnabled !== 'undefined' && multiplayerEnabled && typeof sendPositionUpdate === 'function') {
             sendPositionUpdate();
         }
     }
