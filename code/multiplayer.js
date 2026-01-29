@@ -354,6 +354,12 @@ function handleMessage(data, conn) {
     console.log('Messaggio ricevuto:', data.type);
     
     switch (data.type) {
+        case 'trackSeed':
+            // Ricevi il seed della traccia dall'host
+            trackSeed = data.seed;
+            console.log('Seed traccia ricevuto dall\'host:', trackSeed);
+            break;
+            
         case 'welcome':
             currentRoomCode = data.roomCode;
             myPlayerColor = data.yourColor;
@@ -499,10 +505,34 @@ function checkAllReady() {
 // Avvia la partita multiplayer
 function startMultiplayerGame() {
     console.log('Partita iniziata!');
+    
+    // L'host genera e condivide il seed della traccia
+    if (isRoomHost) {
+        trackSeed = Math.floor(Math.random() * 10000);
+        console.log('Host ha generato seed traccia:', trackSeed);
+        broadcast({ 
+            type: 'trackSeed', 
+            seed: trackSeed 
+        });
+    }
+    
     closeMultiplayerUI();
     titleScreenMode = 0;
     gameStart();
     multiplayerEnabled = true;
+    
+    // Dopo l'avvio, crea i veicoli remoti e aggiungili all'array vehicles
+    setTimeout(() => {
+        remotePlayers.forEach((playerData, playerId) => {
+            if (playerData.vehicle) {
+                // Aggiungi il veicolo remoto alla lista dei veicoli per renderizzarlo e gestire collisioni
+                if (!vehicles.includes(playerData.vehicle)) {
+                    vehicles.push(playerData.vehicle);
+                    console.log('Veicolo remoto aggiunto per collisioni:', playerId);
+                }
+            }
+        });
+    }, 100);
 }
 
 // Invia a tutti i giocatori
@@ -657,6 +687,8 @@ class RemoteVehicle extends Vehicle {
     constructor(z, color) {
         super(z, color);
         this.isRemote = true;
+        // Imposta dimensioni collisione identiche ai veicoli normali
+        this.collisionSize = vec3(230, 200, 380);
     }
     
     update() {
@@ -664,10 +696,14 @@ class RemoteVehicle extends Vehicle {
         const trackInfo = new TrackSegmentInfo(this.pos.z);
         this.pos.y = trackInfo.offset.y;
         
+        // Mantieni l'angolatura delle ruote per il rendering
         if (this.velocity.z > 0) {
             this.wheelTurn = lerp(.1, this.wheelTurn, this.pos.x / 1000);
         }
     }
+    
+    // I veicoli remoti devono essere trattati come ostacoli fisici
+    // Non sovrascriviamo altri metodi per mantenere la fisica delle collisioni
 }
 
 // Avvia il timer per l'host (1 minuto)
