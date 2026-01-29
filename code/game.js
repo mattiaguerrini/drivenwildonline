@@ -97,8 +97,20 @@ function gameInit()
     cameraOffset = 0;
     vehicles = [];
     
-    initMultiplayer();  // Inizializza il multiplayer
-    initMenu();         // Inizializza il menu principale
+    // Inizializza il multiplayer (con controllo)
+    if (typeof initMultiplayer === 'function') {
+        initMultiplayer();
+    } else {
+        console.warn('initMultiplayer non disponibile - multiplayer disabilitato');
+    }
+    
+    // Inizializza il menu principale
+    if (typeof initMenu === 'function') {
+        initMenu();
+    } else {
+        console.warn('initMenu non disponibile - avvio diretto');
+        gameStart(); // Fallback
+    }
     
     // Non avviare gameStart immediatamente - aspetta la scelta del menu
     // gameStart() viene chiamato quando l'utente sceglie una modalità

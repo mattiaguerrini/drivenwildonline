@@ -29,7 +29,7 @@ function initMultiplayer() {
     console.log('Multiplayer P2P pronto (PeerJS Cloud)');
 }
 
-// Crea l'interfaccia UI
+// Crea l'interfaccia UI stile terminale Windows
 function createMultiplayerUI() {
     multiplayerUI = document.createElement('div');
     multiplayerUI.id = 'multiplayer-ui';
@@ -38,76 +38,109 @@ function createMultiplayerUI() {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: rgba(0, 0, 0, 0.95);
-        padding: 30px;
-        border-radius: 10px;
-        color: white;
-        font-family: Arial, sans-serif;
+        background: #000080;
+        padding: 0;
+        border: 4px solid #c0c0c0;
+        box-shadow: 
+            inset -2px -2px 0 #000000,
+            inset 2px 2px 0 #ffffff,
+            4px 4px 0 #000000;
+        font-family: 'Consolas', 'Courier New', monospace;
         z-index: 1000;
         display: none;
-        min-width: 400px;
+        min-width: 500px;
         max-width: 90%;
-        box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
-        border: 2px solid rgba(0, 255, 255, 0.3);
     `;
     
     multiplayerUI.innerHTML = `
-        <div id="menu-screen">
-            <h2 style="text-align: center; margin-top: 0; color: #00ffff;">MULTIPLAYER P2P</h2>
-            <p style="text-align: center; font-size: 12px; color: #aaa; margin-bottom: 20px;">Connessioni Peer-to-Peer</p>
-            <button onclick="showCreateRoom()" style="width: 100%; padding: 15px; margin: 10px 0; font-size: 18px; cursor: pointer; background: #00ff00; border: none; border-radius: 5px; font-weight: bold;">
-                CREA STANZA
-            </button>
-            <button onclick="showJoinRoom()" style="width: 100%; padding: 15px; margin: 10px 0; font-size: 18px; cursor: pointer; background: #0088ff; border: none; border-radius: 5px; font-weight: bold;">
-                ENTRA IN STANZA
-            </button>
-            <button onclick="closeMultiplayerUI()" style="width: 100%; padding: 15px; margin: 10px 0; font-size: 18px; cursor: pointer; background: #ff0000; border: none; border-radius: 5px; font-weight: bold;">
-                ANNULLA
-            </button>
+        <!-- Barra titolo Windows -->
+        <div style="
+            background: linear-gradient(180deg, #000080 0%, #1084d0 100%);
+            padding: 3px 5px;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            border-bottom: 2px solid #c0c0c0;
+            display: flex;
+            align-items: center;
+        ">
+            <span style="margin-right: 10px;">🌐</span>
+            <span>MULTIPLAYER P2P - Connessioni Peer-to-Peer</span>
         </div>
         
-        <div id="create-room-screen" style="display: none;">
-            <h2 style="text-align: center;">Crea Stanza</h2>
-            <p id="connection-status" style="text-align: center; color: #aaa;">Connessione al server P2P...</p>
-            <div id="create-room-status"></div>
-        </div>
-        
-        <div id="join-room-screen" style="display: none;">
-            <h2 style="text-align: center;">Entra in Stanza</h2>
-            <input type="text" id="room-code-input" placeholder="Codice stanza (6 cifre)" maxlength="6" 
-                style="width: 100%; padding: 15px; margin: 10px 0; font-size: 24px; text-align: center; border: 2px solid #00ffff; background: #222; color: white; border-radius: 5px;">
-            <button onclick="joinRoom()" style="width: 100%; padding: 15px; margin: 10px 0; font-size: 18px; cursor: pointer; background: #00ff00; border: none; border-radius: 5px; font-weight: bold;">
-                ENTRA
-            </button>
-            <button onclick="backToMenu()" style="width: 100%; padding: 15px; margin: 10px 0; font-size: 18px; cursor: pointer; background: #ff8800; border: none; border-radius: 5px; font-weight: bold;">
-                INDIETRO
-            </button>
-            <div id="join-error" style="color: #ff4444; text-align: center; margin-top: 10px;"></div>
-            <p id="join-status" style="text-align: center; color: #aaa; margin-top: 10px; font-size: 12px;"></p>
-        </div>
-        
-        <div id="lobby-screen" style="display: none;">
-            <h2 style="text-align: center;">STANZA: <span id="lobby-room-code"></span></h2>
-            <p style="text-align: center; color: #00ff00;">Il tuo colore: <span id="my-color"></span></p>
-            <h3>Giocatori (<span id="player-count">0</span>/3):</h3>
-            <div id="players-list" style="margin: 20px 0; max-height: 200px; overflow-y: auto;"></div>
-            
-            <!-- Pulsante START per l'host (senza timer) -->
-            <div id="host-controls" style="display: none; text-align: center; margin: 20px 0; padding: 15px; background: rgba(255, 170, 0, 0.2); border-radius: 10px; border: 2px solid #ffaa00;">
-                <button id="host-start-button" onclick="hostForceStart()" style="width: 100%; padding: 15px; margin: 10px 0; font-size: 18px; cursor: pointer; background: linear-gradient(135deg, #ff8800, #ff4400); border: none; border-radius: 5px; font-weight: bold; color: white;">
-                    🚀 START PARTITA
+        <!-- Contenuto -->
+        <div style="background: #c0c0c0; padding: 20px;">
+            <div id="menu-screen">
+                <pre style="background: #000; color: #0f0; padding: 10px; margin-bottom: 15px; border: 2px inset #808080;">C:\\GAMES\\MULTIPLAYER&gt; SELECT MODE
+                
+[1] CREATE ROOM - Host a new game
+[2] JOIN ROOM - Enter existing game
+[3] CANCEL - Return to main menu</pre>
+                <button onclick="showCreateRoom()" style="width: 100%; padding: 12px; margin: 8px 0; font-family: 'Consolas', monospace; font-size: 16px; background: #c0c0c0; border: 3px solid; border-color: #fff #000 #000 #fff; color: #000; cursor: pointer; font-weight: bold;" onmouseover="this.style.background='#000080'; this.style.color='#fff';" onmouseout="this.style.background='#c0c0c0'; this.style.color='#000';">
+                    [1] CREA STANZA
                 </button>
-                <p style="font-size: 0.9em; color: #aaa;">Avvia quando sei pronto!</p>
+                <button onclick="showJoinRoom()" style="width: 100%; padding: 12px; margin: 8px 0; font-family: 'Consolas', monospace; font-size: 16px; background: #c0c0c0; border: 3px solid; border-color: #fff #000 #000 #fff; color: #000; cursor: pointer; font-weight: bold;" onmouseover="this.style.background='#000080'; this.style.color='#fff';" onmouseout="this.style.background='#c0c0c0'; this.style.color='#000';">
+                    [2] ENTRA IN STANZA
+                </button>
+                <button onclick="closeMultiplayerUI()" style="width: 100%; padding: 12px; margin: 8px 0; font-family: 'Consolas', monospace; font-size: 16px; background: #c0c0c0; border: 3px solid; border-color: #fff #000 #000 #fff; color: #000; cursor: pointer; font-weight: bold;" onmouseover="this.style.background='#800000'; this.style.color='#fff';" onmouseout="this.style.background='#c0c0c0'; this.style.color='#000';">
+                    [3] ANNULLA
+                </button>
             </div>
             
-            <button id="ready-button" onclick="playerReady()" style="width: 100%; padding: 15px; margin: 10px 0; font-size: 18px; cursor: pointer; background: #00ff00; border: none; border-radius: 5px; font-weight: bold;">
-                PRONTO
-            </button>
-            <button onclick="leaveRoom()" style="width: 100%; padding: 15px; margin: 10px 0; font-size: 18px; cursor: pointer; background: #ff0000; border: none; border-radius: 5px; font-weight: bold;">
-                ESCI
-            </button>
-            <p id="waiting-message" style="text-align: center; color: #ffff00; display: none;">In attesa che tutti siano pronti...</p>
+            <div id="create-room-screen" style="display: none;">
+                <pre style="background: #000; color: #0f0; padding: 10px; margin-bottom: 15px; border: 2px inset #808080;">C:\\GAMES\\MULTIPLAYER&gt; CREATE_ROOM.EXE</pre>
+                <p id="connection-status" style="text-align: center; padding: 10px; background: #000; color: #ffff00; border: 2px inset #808080;">Connessione al server P2P...</p>
+                <div id="create-room-status"></div>
+            </div>
+            
+            <div id="join-room-screen" style="display: none;">
+                <pre style="background: #000; color: #0f0; padding: 10px; margin-bottom: 15px; border: 2px inset #808080;">C:\\GAMES\\MULTIPLAYER&gt; JOIN_ROOM.EXE
+                
+Enter 6-digit room code:</pre>
+                <input type="text" id="room-code-input" placeholder="000000" maxlength="6" 
+                    style="width: 100%; padding: 15px; margin: 10px 0; font-size: 24px; text-align: center; border: 3px inset #808080; background: #fff; color: #000; font-family: 'Consolas', monospace; font-weight: bold;">
+                <button onclick="joinRoom()" style="width: 100%; padding: 12px; margin: 8px 0; font-family: 'Consolas', monospace; font-size: 16px; background: #c0c0c0; border: 3px solid; border-color: #fff #000 #000 #fff; color: #000; cursor: pointer; font-weight: bold;" onmouseover="this.style.background='#008000'; this.style.color='#fff';" onmouseout="this.style.background='#c0c0c0'; this.style.color='#000';">
+                    ENTRA
+                </button>
+                <button onclick="backToMenu()" style="width: 100%; padding: 12px; margin: 8px 0; font-family: 'Consolas', monospace; font-size: 16px; background: #c0c0c0; border: 3px solid; border-color: #fff #000 #000 #fff; color: #000; cursor: pointer; font-weight: bold;" onmouseover="this.style.background='#800000'; this.style.color='#fff';" onmouseout="this.style.background='#c0c0c0'; this.style.color='#000';">
+                    INDIETRO
+                </button>
+                <div id="join-error" style="color: #ff0000; background: #ffff00; padding: 5px; text-align: center; margin-top: 10px; border: 2px solid #000; display: none;"></div>
+                <p id="join-status" style="text-align: center; color: #000; margin-top: 10px; font-size: 12px;"></p>
+            </div>
+            
+            <div id="lobby-screen" style="display: none;">
+                <pre style="background: #000; color: #0f0; padding: 10px; margin-bottom: 15px; border: 2px inset #808080;">C:\\GAMES\\MULTIPLAYER&gt; LOBBY.EXE
+
+ROOM CODE: <span id="lobby-room-code" style="color: #ffff00;"></span>
+YOUR COLOR: <span id="my-color" style="font-weight: bold;"></span>
+
+PLAYERS (<span id="player-count">0</span>/3):</pre>
+                <div id="players-list" style="margin: 10px 0; padding: 10px; background: #000; color: #0f0; border: 2px inset #808080; max-height: 150px; overflow-y: auto; font-family: 'Consolas', monospace;"></div>
+                
+                <!-- Pulsante START per l'host -->
+                <div id="host-controls" style="display: none; margin: 10px 0;">
+                    <button id="host-start-button" onclick="hostForceStart()" style="width: 100%; padding: 15px; font-family: 'Consolas', monospace; font-size: 18px; background: #ffff00; border: 3px solid; border-color: #fff #000 #000 #fff; color: #000; cursor: pointer; font-weight: bold; animation: blink-button 1s infinite;" onmouseover="this.style.background='#ff0000'; this.style.color='#fff';" onmouseout="this.style.background='#ffff00'; this.style.color='#000';">
+                        >>> START PARTITA <<<
+                    </button>
+                </div>
+                
+                <button id="ready-button" onclick="playerReady()" style="width: 100%; padding: 12px; margin: 8px 0; font-family: 'Consolas', monospace; font-size: 16px; background: #c0c0c0; border: 3px solid; border-color: #fff #000 #000 #fff; color: #000; cursor: pointer; font-weight: bold;" onmouseover="this.style.background='#008000'; this.style.color='#fff';" onmouseout="this.style.background='#c0c0c0'; this.style.color='#000';">
+                    PRONTO
+                </button>
+                <button onclick="leaveRoom()" style="width: 100%; padding: 12px; margin: 8px 0; font-family: 'Consolas', monospace; font-size: 16px; background: #c0c0c0; border: 3px solid; border-color: #fff #000 #000 #fff; color: #000; cursor: pointer; font-weight: bold;" onmouseover="this.style.background='#800000'; this.style.color='#fff';" onmouseout="this.style.background='#c0c0c0'; this.style.color='#000';">
+                    ESCI
+                </button>
+                <p id="waiting-message" style="text-align: center; background: #000; color: #ffff00; padding: 5px; border: 2px inset #808080; display: none; font-family: 'Consolas', monospace;">In attesa che tutti siano pronti...</p>
+            </div>
         </div>
+        
+        <style>
+            @keyframes blink-button {
+                0%, 49% { background: #ffff00; }
+                50%, 100% { background: #ff0000; color: #fff; }
+            }
+        </style>
     `;
     
     document.body.appendChild(multiplayerUI);
@@ -287,11 +320,13 @@ function joinRoom() {
     const statusEl = document.getElementById('join-status');
     
     if (roomCode.length !== 6) {
-        errorEl.textContent = 'Il codice deve essere di 6 cifre';
+        errorEl.textContent = '⚠ ERROR: Room code must be 6 digits';
+        errorEl.style.display = 'block';
         return;
     }
     
     errorEl.textContent = '';
+    errorEl.style.display = 'none';
     statusEl.textContent = 'Connessione in corso...';
     
     const peerId = 'drive13k-' + roomCode;
@@ -421,7 +456,7 @@ function showLobby() {
     updatePlayersListUI();
 }
 
-// Aggiorna la lista giocatori
+// Aggiorna la lista giocatori stile terminale
 function updatePlayersListUI() {
     const playersList = document.getElementById('players-list');
     const playerCount = document.getElementById('player-count');
@@ -434,19 +469,21 @@ function updatePlayersListUI() {
     
     // Aggiungi te stesso
     const myReady = playersReady.get(myPlayerId) || false;
-    html += `<div style="padding: 10px; margin: 5px 0; background: rgba(0, 255, 0, 0.2); border-radius: 5px;">
-        <span style="color: hsl(${myPlayerColor.hsl[0]}, ${myPlayerColor.hsl[1]*100}%, ${myPlayerColor.hsl[2]*100}%);">★</span>
-        Tu (${myPlayerColor.name}) ${isRoomHost ? '👑' : ''}
-        ${myReady ? '<span style="color: #00ff00;">✓ PRONTO</span>' : '<span style="color: #ffff00;">In attesa...</span>'}
+    const myColorCode = myPlayerColor.name === 'Rosso' ? '#ff0000' : 
+                        myPlayerColor.name === 'Giallo' ? '#ffff00' : '#0000ff';
+    html += `<div style="margin: 2px 0; color: #0f0;">
+        > <span style="color: ${myColorCode};">[${myPlayerColor.name.toUpperCase()}]</span> YOU ${isRoomHost ? '(HOST)' : '(CLIENT)'}
+        ${myReady ? '  [READY]' : '  [WAITING...]'}
     </div>`;
     
     // Aggiungi gli altri giocatori
     remotePlayers.forEach((remotePlayer, playerId) => {
         const ready = playersReady.get(playerId) || false;
-        html += `<div style="padding: 10px; margin: 5px 0; background: rgba(255, 255, 255, 0.1); border-radius: 5px;">
-            <span style="color: hsl(${remotePlayer.color.hsl[0]}, ${remotePlayer.color.hsl[1]*100}%, ${remotePlayer.color.hsl[2]*100}%);">★</span>
-            Giocatore (${remotePlayer.color.name})
-            ${ready ? '<span style="color: #00ff00;">✓ PRONTO</span>' : '<span style="color: #ffff00;">In attesa...</span>'}
+        const colorCode = remotePlayer.color.name === 'Rosso' ? '#ff0000' : 
+                         remotePlayer.color.name === 'Giallo' ? '#ffff00' : '#0000ff';
+        html += `<div style="margin: 2px 0; color: #0f0;">
+            > <span style="color: ${colorCode};">[${remotePlayer.color.name.toUpperCase()}]</span> PLAYER (CLIENT)
+            ${ready ? '  [READY]' : '  [WAITING...]'}
         </div>`;
     });
     

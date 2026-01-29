@@ -11,7 +11,7 @@ function initMenu() {
     showMainMenu();
 }
 
-// Crea l'interfaccia del menu
+// Crea l'interfaccia del menu stile terminale Windows
 function createMenuUI() {
     menuUI = document.createElement('div');
     menuUI.id = 'main-menu';
@@ -21,110 +21,138 @@ function createMenuUI() {
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(135deg, #000000 0%, #1a0033 50%, #330066 100%);
+        background: #000080;
         z-index: 9999;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        font-family: 'Arial Black', Arial, sans-serif;
+        font-family: 'Consolas', 'Courier New', monospace;
     `;
     
     menuUI.innerHTML = `
-        <div id="menu-content" style="text-align: center; max-width: 600px; width: 90%;">
-            <!-- Logo -->
-            <div id="game-logo" style="margin-bottom: 50px; animation: pulse 2s infinite;">
-                <h1 style="
-                    font-size: 4em;
-                    margin: 0;
-                    background: linear-gradient(45deg, #ff00ff, #00ffff, #ff00ff);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                    background-clip: text;
-                    text-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
-                    letter-spacing: 5px;
-                ">DR1V3N</h1>
-                <h2 style="
-                    font-size: 3em;
-                    margin: 10px 0 0 0;
-                    background: linear-gradient(45deg, #00ffff, #ff00ff, #00ffff);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                    background-clip: text;
-                    text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
-                    letter-spacing: 5px;
-                ">CRAZY</h2>
-                <p style="
-                    color: #aaaaaa;
-                    font-size: 1.2em;
-                    margin-top: 20px;
-                    font-family: Arial, sans-serif;
-                    font-weight: normal;
-                ">Online Racing</p>
+        <div id="terminal-window" style="
+            background: #000080;
+            border: 4px solid #c0c0c0;
+            box-shadow: 
+                inset -2px -2px 0 #000000,
+                inset 2px 2px 0 #ffffff,
+                4px 4px 0 #000000;
+            max-width: 800px;
+            width: 90%;
+            padding: 0;
+        ">
+            <!-- Barra titolo Windows -->
+            <div style="
+                background: linear-gradient(180deg, #000080 0%, #1084d0 100%);
+                padding: 3px 5px;
+                color: white;
+                font-weight: bold;
+                font-size: 14px;
+                border-bottom: 2px solid #c0c0c0;
+                display: flex;
+                align-items: center;
+            ">
+                <span style="margin-right: 10px;">📁</span>
+                <span>C:\\GAMES\\DR1V3N_CRAZY.EXE</span>
+                <div style="margin-left: auto; display: flex; gap: 2px;">
+                    <div style="background: #c0c0c0; color: #000; width: 16px; height: 14px; text-align: center; line-height: 14px; border: 1px solid #fff; font-size: 10px; cursor: pointer;">_</div>
+                    <div style="background: #c0c0c0; color: #000; width: 16px; height: 14px; text-align: center; line-height: 14px; border: 1px solid #fff; font-size: 10px; cursor: pointer;">□</div>
+                    <div style="background: #c0c0c0; color: #000; width: 16px; height: 14px; text-align: center; line-height: 14px; border: 1px solid #fff; font-size: 10px; cursor: pointer;">×</div>
+                </div>
             </div>
             
-            <!-- Menu principale -->
-            <div id="main-menu-buttons" style="display: block;">
-                <button onclick="startSoloMode()" class="menu-button" style="
-                    width: 100%;
-                    padding: 25px;
-                    margin: 15px 0;
-                    font-size: 2em;
-                    font-weight: bold;
-                    background: linear-gradient(135deg, #00ff88, #00aa55);
-                    border: none;
-                    border-radius: 15px;
-                    color: white;
-                    cursor: pointer;
-                    box-shadow: 0 8px 20px rgba(0, 255, 136, 0.4);
-                    transition: all 0.3s;
-                    text-transform: uppercase;
-                    letter-spacing: 3px;
-                " onmouseover="this.style.transform='scale(1.05) translateY(-5px)'; this.style.boxShadow='0 12px 30px rgba(0, 255, 136, 0.6)';" 
-                   onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 20px rgba(0, 255, 136, 0.4)';">
-                    🏁 SOLO
-                </button>
+            <!-- Contenuto terminale -->
+            <div id="terminal-content" style="
+                background: #000000;
+                color: #c0c0c0;
+                padding: 20px;
+                font-size: 16px;
+                min-height: 400px;
+            ">
+                <pre style="margin: 0; line-height: 1.4;">
+Microsoft(R) MS-DOS(R) Version 6.22
+        (C)Copyright Microsoft Corp 1981-1994.
+
+C:\\GAMES\\DR1V3N_CRAZY&gt;dir
+
+ Volume in drive C is GAMES
+ Volume Serial Number is 1337-BEEF
+
+ Directory of C:\\GAMES\\DR1V3N_CRAZY
+
+DR1V3N   CRAZY   EXE    524,288  01-29-26  12:00a
+README   TXT         1,024  01-29-26  12:00a
+               2 file(s)        525,312 bytes
+                             74,448,896 bytes free
+
+C:\\GAMES\\DR1V3N_CRAZY&gt;type README.TXT
+
+╔═══════════════════════════════════════════╗
+║     DR1V3N CRAZY - ONLINE RACING         ║
+║           Version 3.0                     ║
+╚═══════════════════════════════════════════╝
+
+Select game mode:
+</pre>
                 
-                <button onclick="startMultiplayerMode()" class="menu-button" style="
-                    width: 100%;
-                    padding: 25px;
-                    margin: 15px 0;
-                    font-size: 2em;
-                    font-weight: bold;
-                    background: linear-gradient(135deg, #0088ff, #0055aa);
-                    border: none;
-                    border-radius: 15px;
-                    color: white;
-                    cursor: pointer;
-                    box-shadow: 0 8px 20px rgba(0, 136, 255, 0.4);
-                    transition: all 0.3s;
-                    text-transform: uppercase;
-                    letter-spacing: 3px;
-                " onmouseover="this.style.transform='scale(1.05) translateY(-5px)'; this.style.boxShadow='0 12px 30px rgba(0, 136, 255, 0.6)';" 
-                   onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 20px rgba(0, 136, 255, 0.4)';">
-                    🌐 MULTIPLAYER
-                </button>
+                <!-- Menu buttons stile DOS -->
+                <div id="main-menu-buttons" style="margin-top: 20px;">
+                    <button onclick="startSoloMode()" style="
+                        width: 100%;
+                        padding: 15px;
+                        margin: 10px 0;
+                        font-family: 'Consolas', 'Courier New', monospace;
+                        font-size: 18px;
+                        font-weight: bold;
+                        background: #c0c0c0;
+                        border: 3px solid;
+                        border-color: #ffffff #000000 #000000 #ffffff;
+                        color: #000000;
+                        cursor: pointer;
+                        text-align: left;
+                        transition: all 0.1s;
+                    " onmouseover="this.style.background='#000080'; this.style.color='#ffffff';" 
+                       onmouseout="this.style.background='#c0c0c0'; this.style.color='#000000';">
+                        [1] SOLO MODE - Single Player Race
+                    </button>
+                    
+                    <button onclick="startMultiplayerMode()" style="
+                        width: 100%;
+                        padding: 15px;
+                        margin: 10px 0;
+                        font-family: 'Consolas', 'Courier New', monospace;
+                        font-size: 18px;
+                        font-weight: bold;
+                        background: #c0c0c0;
+                        border: 3px solid;
+                        border-color: #ffffff #000000 #000000 #ffffff;
+                        color: #000000;
+                        cursor: pointer;
+                        text-align: left;
+                        transition: all 0.1s;
+                    " onmouseover="this.style.background='#000080'; this.style.color='#ffffff';" 
+                       onmouseout="this.style.background='#c0c0c0'; this.style.color='#000000';">
+                        [2] MULTIPLAYER - Online P2P Race
+                    </button>
+                </div>
                 
-                <p style="
-                    color: #888;
-                    font-size: 0.9em;
-                    margin-top: 30px;
-                    font-family: Arial, sans-serif;
-                    font-weight: normal;
-                ">Scegli la tua modalità di gioco</p>
+                <pre style="margin-top: 20px; color: #808080; font-size: 14px;">
+C:\\GAMES\\DR1V3N_CRAZY&gt;<span id="cursor" style="background: #c0c0c0; animation: blink 1s infinite;">_</span>
+                </pre>
             </div>
         </div>
         
         <style>
-            @keyframes pulse {
-                0%, 100% { transform: scale(1); }
-                50% { transform: scale(1.05); }
+            @keyframes blink {
+                0%, 49% { opacity: 1; }
+                50%, 100% { opacity: 0; }
             }
             
             @media (max-width: 768px) {
-                #game-logo h1 { font-size: 2.5em !important; }
-                #game-logo h2 { font-size: 2em !important; }
-                .menu-button { font-size: 1.5em !important; padding: 20px !important; }
+                #terminal-content { font-size: 12px !important; padding: 10px !important; }
+                #terminal-content button { font-size: 14px !important; padding: 12px !important; }
+                #terminal-window { border-width: 2px !important; }
             }
         </style>
     `;
