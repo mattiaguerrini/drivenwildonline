@@ -653,7 +653,7 @@ class PlayerVehicle extends Vehicle
         }
         
         // Invia aggiornamento posizione al server multiplayer
-        if (multiplayerEnabled) {
+        if (typeof multiplayerEnabled !== 'undefined' && multiplayerEnabled) {
             sendPositionUpdate();
         }
     }

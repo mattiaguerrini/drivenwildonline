@@ -841,18 +841,6 @@ function checkAllReady() {
     });
     
     if (allReady) {
-        console.log('Tutti pronti! Avvio automatico...');
-        setTimeout(() => {
-            broadcast({ type: 'gameStart' });
-            startMultiplayerGame();
-        }, 1000);
-    }
-}
-    remotePlayers.forEach((player, playerId) => {
-        if (!playersReady.get(playerId)) allReady = false;
-    });
-    
-    if (allReady) {
         console.log('Tutti pronti! Verifica timer...');
         
         // Se il timer non è ancora scaduto, aspetta
